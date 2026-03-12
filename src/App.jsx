@@ -2,6 +2,7 @@ import { useState } from "react"
 import Timer from "./components/Timer"
 import Scene from "./components/Scene"
 import Quotes from "./components/Quotes"
+import TaskBoard from "./components/TaskBoard"
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Quotes />
       <Scene />
       <Timer />
+      <TaskBoard />
     </div>
   )
 }
