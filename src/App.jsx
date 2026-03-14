@@ -6,13 +6,15 @@ import TaskBoard from "./components/TaskBoard"
 import SoundMixer from "./components/SoundMixer"
 
 function App() {
+  const [scenePreset, setScenePreset] = useState(null)
+
   return (
     <div className="app">
       <Quotes />
-      <Scene />
+      <Scene onSceneChange={setScenePreset} />
       <Timer />
       <TaskBoard />
-      <SoundMixer />
+      <SoundMixer externalPreset={scenePreset} />
     </div>
   )
 }

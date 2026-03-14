@@ -26,7 +26,7 @@ const PRESETS = [
   { name: "Silence",     config: { rain: 0,  fireplace: 0,  brown: 0,  white: 0,  forest: 0,  cafe: 0  }},
 ]
 
-export default function SoundMixer() {
+export default function SoundMixer({ externalPreset }) {
   const [volumes, setVolumes] = useState({
     rain: 0, fireplace: 0, brown: 0, white: 0, forest: 0, cafe: 0
   })
@@ -34,6 +34,7 @@ export default function SoundMixer() {
   const [activePreset, setActivePreset] = useState(null)
   const howls = useRef({})
 
+  // Initialize Howls once
   useEffect(() => {
     SOUNDS.forEach(s => {
       howls.current[s.id] = new Howl({
@@ -47,6 +48,7 @@ export default function SoundMixer() {
     }
   }, [])
 
+  // Update volumes when state changes
   useEffect(() => {
     SOUNDS.forEach(s => {
       const h = howls.current[s.id]
@@ -57,6 +59,14 @@ export default function SoundMixer() {
       if (vol === 0 && h.playing()) h.stop()
     })
   }, [volumes])
+
+  // Listen for scene changes
+  useEffect(() => {
+    if (externalPreset) {
+      setVolumes(externalPreset)
+      setActivePreset("Scene Default")
+    }
+  }, [externalPreset])
 
   const applyPreset = (preset) => {
     setVolumes(preset.config)
@@ -95,16 +105,16 @@ export default function SoundMixer() {
       </div>
 
       {isOpen && (
-    <div style={{
-      background: "rgba(0,0,0,0.45)",
-      backdropFilter: "blur(10px)",
-      padding: "14px",
-      borderRadius: "0 0 15px 15px",
-      maxHeight: "75vh",
-      overflowY: "auto",
-      scrollbarWidth: "thin",
-      scrollbarColor: "rgba(100,255,150,0.3) transparent"
-    }}>
+        <div style={{
+          background: "rgba(0,0,0,0.45)",
+          backdropFilter: "blur(10px)",
+          padding: "14px",
+          borderRadius: "0 0 15px 15px",
+          maxHeight: "75vh",
+          overflowY: "auto",
+          scrollbarWidth: "thin",
+          scrollbarColor: "rgba(100,255,150,0.3) transparent"
+        }}>
 
           {/* Presets */}
           <div style={{ marginBottom: "14px" }}>
