@@ -1,49 +1,36 @@
 import { useState, useEffect } from "react"
-import darjeeling from "../assets/scenes/Darjeeling.jpg"
-import munnar from "../assets/scenes/munnar.jpg"
-import manali from "../assets/scenes/manali.jpg"
-import coorg from "../assets/scenes/coorg.jpg"
-import chicagoSnow from "../assets/scenes/chicago_snow.mp4"
+import AnimatedScene from "./AnimatedScene"
+
 const SCENES = [
   {
     id: "darjeeling",
     name: "Darjeeling",
     country: "West Bengal, India 🇮🇳",
-    type: "image",
-    src: darjeeling,
-    filter: "brightness(0.55)",
+    soundPreset: null,
   },
   {
     id: "munnar",
     name: "Munnar",
     country: "Kerala, India 🇮🇳",
-    type: "image",
-    src: munnar,
-    filter: "brightness(0.55)",
+    soundPreset: null,
   },
   {
     id: "manali",
     name: "Manali",
     country: "Himachal Pradesh, India 🇮🇳",
-    type: "image",
-    src: manali,
-    filter: "brightness(0.55)",
+    soundPreset: null,
   },
   {
     id: "coorg",
     name: "Coorg",
     country: "Karnataka, India 🇮🇳",
-    type: "image",
-    src: coorg,
-    filter: "brightness(0.55)",
+    soundPreset: null,
   },
   {
     id: "chicago-snow",
     name: "Chicago Snow",
     country: "Illinois, USA 🇺🇸",
-    type: "video",
-    src: chicagoSnow,
-    filter: "brightness(0.6) saturate(1.4) hue-rotate(10deg)",
+    soundPreset: null,
   }
 ]
 
@@ -85,8 +72,6 @@ export default function Scene({ onSceneChange, focusMode }) {
     return () => clearInterval(interval)
   }, [current, paused])
 
-  const scene = SCENES[current]
-
   return (
     <>
       {/* Background */}
@@ -98,30 +83,7 @@ export default function Scene({ onSceneChange, focusMode }) {
         opacity: fading ? 0 : 1,
         transition: "opacity 0.5s ease",
       }}>
-        {scene.type === "image" ? (
-  <img
-    src={scene.src}
-    alt={scene.name}
-    style={{
-      width: "100%", height: "100%",
-      objectFit: "cover",
-      filter: scene.filter
-    }}
-  />
-) : (
-  <video
-    src={scene.src}
-    autoPlay loop muted playsInline
-    style={{
-      width: "100%", height: "100%",
-      objectFit: "cover",
-      filter: scene.filter,
-      imageRendering: "high-quality",
-      transform: "translateZ(0)",
-      willChange: "transform"
-    }}
-  />
-)}
+        <AnimatedScene sceneId={SCENES[current].id} />
       </div>
 
       {/* Scene Controls — hidden in focus mode */}

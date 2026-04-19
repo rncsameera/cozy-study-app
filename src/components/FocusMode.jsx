@@ -17,6 +17,17 @@ const SOUNDS = [
   { id: "cafe",      emoji: "☕", src: cafeSrc },
 ]
 
+const FALLBACK_QUOTES = [
+  { content: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+  { content: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+  { content: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+  { content: "The expert in anything was once a beginner.", author: "Helen Hayes" },
+  { content: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+  { content: "Small progress is still progress.", author: "Unknown" },
+  { content: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+  { content: "Focus on being productive instead of busy.", author: "Tim Ferriss" },
+]
+
 export default function FocusMode({
   scene, onExit, externalPreset,
   focusTime, breakTime, onSaveNote
@@ -29,6 +40,8 @@ export default function FocusMode({
   const [showControls, setShowControls] = useState(true)
   const [note, setNote]                 = useState("")
   const [noteSaved, setNoteSaved]       = useState(false)
+  const [quote, setQuote]               = useState(FALLBACK_QUOTES[0])
+  const [quoteVisible, setQuoteVisible] = useState(true)
   const [tasks, setTasks]               = useState(() => {
     const saved = localStorage.getItem("stillspace-tasks")
     return saved ? JSON.parse(saved) : []
@@ -38,7 +51,7 @@ export default function FocusMode({
   )
   const howls = useRef({})
 
-  // Hide controls after 3 seconds of no movement
+  // Hide controls after 3 seconds
   useEffect(() => {
     let timeout
     const show = () => {
@@ -106,6 +119,33 @@ export default function FocusMode({
     if (externalPreset) setVolumes(externalPreset)
   }, [externalPreset])
 
+  // Quote fetch
+  const fetchQuote = async () => {
+    try {
+      const res = await fetch("https://api.quotable.io/random?tags=inspirational,success,education")
+      const data = await res.json()
+      if (data.content) setQuote({ content: data.content, author: data.author })
+      else throw new Error()
+    } catch {
+      const random = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]
+      setQuote(random)
+    }
+  }
+
+  const changeQuote = async () => {
+    setQuoteVisible(false)
+    setTimeout(async () => {
+      await fetchQuote()
+      setQuoteVisible(true)
+    }, 400)
+  }
+
+  useEffect(() => { fetchQuote() }, [])
+  useEffect(() => {
+    const interval = setInterval(changeQuote, 10 * 1000)
+    return () => clearInterval(interval)
+  }, [])
+
   const formatTime = (s) => {
     const m = Math.floor(s / 60).toString().padStart(2, "0")
     const sec = (s % 60).toString().padStart(2, "0")
@@ -143,7 +183,7 @@ export default function FocusMode({
       color: "white", fontFamily: "Georgia, serif"
     }}>
 
-      {/* ESC hint — top center */}
+      {/* ESC hint */}
       {showControls && (
         <div style={{
           position: "fixed", top: "16px", left: "50%",
@@ -154,6 +194,37 @@ export default function FocusMode({
           ESC TO EXIT
         </div>
       )}
+
+      {/* QUOTE — top center, always visible */}
+      <div
+        onClick={changeQuote}
+        title="Click for new quote"
+        style={{
+          position: "fixed",
+          top: "50px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          color: "white",
+          textAlign: "center",
+          background: "rgba(0,0,0,0.35)",
+          padding: "14px 28px",
+          borderRadius: "15px",
+          backdropFilter: "blur(10px)",
+          zIndex: 101,
+          maxWidth: "500px",
+          width: "90%",
+          transition: "opacity 0.4s ease",
+          opacity: quoteVisible ? 1 : 0,
+          cursor: "pointer",
+        }}
+      >
+        <p style={{ fontSize: "14px", fontStyle: "italic", marginBottom: "6px", lineHeight: "1.5", margin: "0 0 6px" }}>
+          "{quote.content}"
+        </p>
+        <p style={{ fontSize: "11px", opacity: 0.6, letterSpacing: "1px", margin: 0 }}>
+          — {quote.author}
+        </p>
+      </div>
 
       {/* TOP LEFT — Timer */}
       <div style={{
@@ -217,15 +288,10 @@ export default function FocusMode({
           📋 TODAY'S GOALS
         </p>
         {tasks.length === 0 && (
-          <p style={{ fontSize: "11px", opacity: 0.4, textAlign: "center" }}>
-            No tasks added
-          </p>
+          <p style={{ fontSize: "11px", opacity: 0.4, textAlign: "center" }}>No tasks added</p>
         )}
         {tasks.map(task => (
-          <div key={task.id} style={{
-            display: "flex", alignItems: "center", gap: "8px",
-            marginBottom: "8px"
-          }}>
+          <div key={task.id} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
             <input
               type="checkbox"
               checked={task.done}
@@ -254,17 +320,10 @@ export default function FocusMode({
         opacity: showControls ? 1 : 0.1,
         transition: "opacity 0.3s ease"
       }}>
-        <div style={{
-          display: "flex", justifyContent: "space-between",
-          alignItems: "center", marginBottom: "8px"
-        }}>
-          <p style={{ fontSize: "9px", letterSpacing: "2px", opacity: 0.5, margin: 0 }}>
-            📝 QUICK NOTE
-          </p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+          <p style={{ fontSize: "9px", letterSpacing: "2px", opacity: 0.5, margin: 0 }}>📝 QUICK NOTE</p>
           <button onClick={handleSaveNote} style={{
-            background: noteSaved
-              ? "rgba(100,255,150,0.3)"
-              : "rgba(100,255,150,0.15)",
+            background: noteSaved ? "rgba(100,255,150,0.3)" : "rgba(100,255,150,0.15)",
             border: "1px solid rgba(100,255,150,0.3)",
             borderRadius: "8px", color: "white",
             fontSize: "10px", padding: "3px 12px",

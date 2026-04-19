@@ -5,7 +5,6 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore"
 import { auth, db } from "../firebase"
 import Timer from "../components/Timer"
 import Scene from "../components/Scene"
-import Quotes from "../components/Quotes"
 import TaskBoard from "../components/TaskBoard"
 import SoundMixer from "../components/SoundMixer"
 import FocusMode from "../components/FocusMode"
@@ -63,7 +62,6 @@ export default function StudyPage({ user }) {
           >
             ← DASHBOARD
           </button>
-          <Quotes />
           <Timer
             onFocusStart={() => setFocusMode(true)}
             onTimerChange={(f, b) => { setFocusTime(f); setBreakTime(b) }}

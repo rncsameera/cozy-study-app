@@ -20,9 +20,11 @@ export default function NotesPage({ user }) {
         orderBy("createdAt", "desc")
       )
       const snapshot = await getDocs(q)
+      console.log("Notes found:", snapshot.docs.length)      // 👈 check this
+      console.log("User uid:", user.uid)                     // 👈 and this
       setNotes(snapshot.docs.map(d => ({ id: d.id, ...d.data() })))
     } catch (err) {
-      console.error(err)
+      console.error("Notes fetch error:", err)               // 👈 and this
     }
     setLoading(false)
   }
@@ -47,7 +49,6 @@ export default function NotesPage({ user }) {
       background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%)",
       fontFamily: "Georgia, serif", color: "white"
     }}>
-      {/* Header */}
       <div style={{
         padding: "20px 40px",
         display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -63,12 +64,9 @@ export default function NotesPage({ user }) {
         <div style={{ width: "60px" }} />
       </div>
 
-      {/* Content */}
       <div style={{ maxWidth: "700px", margin: "0 auto", padding: "40px 20px" }}>
         {loading && (
-          <p style={{ textAlign: "center", opacity: 0.4, letterSpacing: "2px" }}>
-            LOADING...
-          </p>
+          <p style={{ textAlign: "center", opacity: 0.4, letterSpacing: "2px" }}>LOADING...</p>
         )}
 
         {!loading && notes.length === 0 && (

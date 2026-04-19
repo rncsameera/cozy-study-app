@@ -11,7 +11,7 @@ const FALLBACK_QUOTES = [
   { content: "Focus on being productive instead of busy.", author: "Tim Ferriss" },
 ]
 
-export default function Quotes() {
+export default function Quotes({ focusMode = false }) {
   const [quote, setQuote] = useState(FALLBACK_QUOTES[0])
   const [visible, setVisible] = useState(true)
 
@@ -21,36 +21,29 @@ export default function Quotes() {
       const data = await res.json()
       if (data.content) {
         setQuote({ content: data.content, author: data.author })
-      } else {
-        throw new Error("no content")
-      }
+      } else throw new Error("no content")
     } catch {
-      // API failed, use fallback
       const random = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]
       setQuote(random)
     }
   }
 
   const changeQuote = async () => {
-    // Fade out
     setVisible(false)
     setTimeout(async () => {
       await fetchQuote()
-      // Fade in
       setVisible(true)
     }, 400)
   }
 
-  // Fetch on first load
-  useEffect(() => {
-    fetchQuote()
-  }, [])
-
-  // Auto change every 5 minutes
+  useEffect(() => { fetchQuote() }, [])
   useEffect(() => {
     const interval = setInterval(changeQuote, 10 * 1000)
     return () => clearInterval(interval)
   }, [])
+
+  // In focus mode, render nothing — FocusMode.jsx handles it inline
+  if (focusMode) return null
 
   return (
     <div style={{
