@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react"
 
-// ─── Flip Card ────────────────────────────────────────────────────────────
 function FlipCard({ value }) {
   const [current, setCurrent] = useState(value)
   const [previous, setPrevious] = useState(value)
@@ -17,35 +16,8 @@ function FlipCard({ value }) {
     }
   }, [value])
 
-  const cardStyle = {
-    width: "75px",
-    height: "95px",
-    position: "relative",
-    perspective: "400px",
-  }
-
-  const halfStyle = {
-    position: "absolute",
-    width: "100%",
-    height: "50%",
-    display: "flex",
-    justifyContent: "center",
-    overflow: "hidden",
-    borderRadius: "6px",
-  }
-
-  const numStyle = {
-    fontSize: "72px",
-    fontWeight: "700",
-    color: "white",
-    fontFamily: "'Courier New', monospace",
-    lineHeight: "95px",
-    position: "absolute",
-    userSelect: "none",
-  }
-
   return (
-    <div style={cardStyle}>
+    <div style={{ position: "relative", width: "42px", height: "56px", perspective: "400px" }}>
       <style>{`
         @keyframes flipTop {
           from { transform: rotateX(0deg); }
@@ -57,109 +29,101 @@ function FlipCard({ value }) {
         }
       `}</style>
 
-      {/* Top half — current */}
+      {/* Top half */}
       <div style={{
-        ...halfStyle, top: 0,
-        background: "rgba(25,25,25,0.95)",
-        alignItems: "flex-end",
-        borderBottom: "1px solid rgba(0,0,0,0.5)",
+        position: "absolute", top: 0, width: "100%", height: "50%",
+        background: "rgba(25,25,25,0.95)", borderRadius: "6px 6px 0 0",
+        display: "flex", alignItems: "flex-end", justifyContent: "center",
+        overflow: "hidden"
       }}>
-        <span style={{ ...numStyle, top: 0 }}>{current}</span>
+        <span style={{
+          fontSize: "38px", fontWeight: "700", color: "white",
+          fontFamily: "monospace", lineHeight: "56px", marginBottom: "-28px"
+        }}>{current}</span>
       </div>
 
-      {/* Bottom half — current */}
+      {/* Bottom half */}
       <div style={{
-        ...halfStyle, bottom: 0,
-        background: "rgba(15,15,15,0.95)",
-        alignItems: "flex-start",
+        position: "absolute", bottom: 0, width: "100%", height: "50%",
+        background: "rgba(15,15,15,0.95)", borderRadius: "0 0 6px 6px",
+        display: "flex", alignItems: "flex-start", justifyContent: "center",
+        overflow: "hidden"
       }}>
-        <span style={{ ...numStyle, bottom: 0 }}>{current}</span>
+        <span style={{
+          fontSize: "38px", fontWeight: "700", color: "white",
+          fontFamily: "monospace", lineHeight: "56px", marginTop: "-28px"
+        }}>{current}</span>
       </div>
 
-      {/* Flipping top (previous flips away) */}
+      {/* Flipping top */}
       {flipping && (
         <div style={{
-          ...halfStyle, top: 0,
-          background: "rgba(35,35,35,0.98)",
-          alignItems: "flex-end",
-          transformOrigin: "bottom center",
-          animation: "flipTop 0.3s ease-in forwards",
-          zIndex: 3,
+          position: "absolute", top: 0, width: "100%", height: "50%",
+          background: "rgba(35,35,35,0.98)", borderRadius: "6px 6px 0 0",
+          display: "flex", alignItems: "flex-end", justifyContent: "center",
+          overflow: "hidden", transformOrigin: "bottom center",
+          animation: "flipTop 0.3s ease-in forwards", zIndex: 3
         }}>
-          <span style={{ ...numStyle, top: 0 }}>{previous}</span>
+          <span style={{
+            fontSize: "38px", fontWeight: "700", color: "white",
+            fontFamily: "monospace", lineHeight: "56px", marginBottom: "-28px"
+          }}>{previous}</span>
         </div>
       )}
 
-      {/* Flipping bottom (new value flips in) */}
+      {/* Flipping bottom */}
       {flipping && (
         <div style={{
-          ...halfStyle, bottom: 0,
-          background: "rgba(15,15,15,0.98)",
-          alignItems: "flex-start",
-          transformOrigin: "top center",
-          animation: "flipBottom 0.3s ease-out forwards",
-          zIndex: 3,
+          position: "absolute", bottom: 0, width: "100%", height: "50%",
+          background: "rgba(15,15,15,0.98)", borderRadius: "0 0 6px 6px",
+          display: "flex", alignItems: "flex-start", justifyContent: "center",
+          overflow: "hidden", transformOrigin: "top center",
+          animation: "flipBottom 0.3s ease-out forwards", zIndex: 3
         }}>
-          <span style={{ ...numStyle, bottom: 0 }}>{value}</span>
+          <span style={{
+            fontSize: "38px", fontWeight: "700", color: "white",
+            fontFamily: "monospace", lineHeight: "56px", marginTop: "-28px"
+          }}>{value}</span>
         </div>
       )}
 
-      {/* Center line */}
+      {/* Center divider */}
       <div style={{
         position: "absolute", top: "calc(50% - 1px)",
         width: "100%", height: "2px",
-        background: "rgba(0,0,0,0.8)", zIndex: 5,
+        background: "rgba(0,0,0,0.8)", zIndex: 4
       }} />
     </div>
   )
 }
 
-// ─── Flip Clock Display ─────────────────────────────────────────────────────
 function FlipClock({ minutes, seconds }) {
   const m = minutes.toString().padStart(2, "0")
   const s = seconds.toString().padStart(2, "0")
 
-  const sepStyle = {
-    fontSize: "64px", fontWeight: "700",
-    color: "rgba(255,255,255,0.6)",
-    fontFamily: "monospace",
-    alignSelf: "center",
-    marginBottom: "6px",
-    lineHeight: 1,
-  }
-
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+    <div style={{  display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
       <FlipCard value={m[0]} />
       <FlipCard value={m[1]} />
-      <span style={sepStyle}>:</span>
+      <span style={{
+        fontSize: "32px", fontWeight: "700",
+        color: "rgba(255,255,255,0.6)",
+        fontFamily: "monospace", alignSelf: "center",
+        marginBottom: "4px", lineHeight: 1
+      }}>:</span>
       <FlipCard value={s[0]} />
       <FlipCard value={s[1]} />
     </div>
   )
 }
 
-// ─── Shared button style ────────────────────────────────────────────────────
-const btnStyle = {
-  padding: "10px 24px",
-  background: "rgba(255,255,255,0.12)",
-  border: "1px solid rgba(255,255,255,0.25)",
-  borderRadius: "25px",
-  color: "white",
-  fontSize: "13px",
-  cursor: "pointer",
-  letterSpacing: "0.5px",
-}
-
-// ─── Presets ────────────────────────────────────────────────────────────────
 const PRESETS = [
   { label: "Classic", focus: 25, break: 5 },
   { label: "Long",    focus: 50, break: 10 },
   { label: "Short",   focus: 15, break: 3 },
 ]
 
-// ─── Pomodoro ───────────────────────────────────────────────────────────────
-function PomodoroTimer() {
+function PomodoroTimer({ onFocusStart, onTimerChange }) {
   const [focusTime, setFocusTime]       = useState(25)
   const [breakTime, setBreakTime]       = useState(5)
   const [timeLeft, setTimeLeft]         = useState(25 * 60)
@@ -195,6 +159,7 @@ function PomodoroTimer() {
     setTimeLeft(p.focus * 60)
     setCustomFocus(p.focus)
     setCustomBreak(p.break)
+    if (onTimerChange) onTimerChange(p.focus, p.break)
   }
 
   const applyCustom = () => {
@@ -206,6 +171,7 @@ function PomodoroTimer() {
     setBreakTime(b)
     setTimeLeft(f * 60)
     setShowSettings(false)
+    if (onTimerChange) onTimerChange(f, b)
   }
 
   const minutes = Math.floor(timeLeft / 60)
@@ -213,19 +179,19 @@ function PomodoroTimer() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <p style={{ fontSize: "11px", letterSpacing: "3px", marginBottom: "18px", opacity: 0.6 }}>
+      <p style={{ fontSize: "10px", letterSpacing: "3px", marginBottom: "12px", opacity: 0.6 }}>
         {isBreak ? "☕ BREAK TIME" : "🎯 FOCUS TIME"} — Session {sessions + 1}
       </p>
 
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: "12px" }}>
         <FlipClock minutes={minutes} seconds={seconds} />
       </div>
 
       {/* Presets */}
-      <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginBottom: "12px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "6px", justifyContent: "center", marginBottom: "10px", flexWrap: "wrap" }}>
         {PRESETS.map(p => (
           <button key={p.label} onClick={() => applyPreset(p)} style={{
-            padding: "4px 12px", borderRadius: "12px", fontSize: "11px",
+            padding: "3px 10px", borderRadius: "12px", fontSize: "10px",
             cursor: "pointer", border: "1px solid rgba(255,255,255,0.2)",
             background: focusTime === p.focus && breakTime === p.break
               ? "rgba(100,255,150,0.3)" : "rgba(255,255,255,0.08)",
@@ -235,7 +201,7 @@ function PomodoroTimer() {
           </button>
         ))}
         <button onClick={() => setShowSettings(!showSettings)} style={{
-          padding: "4px 12px", borderRadius: "12px", fontSize: "11px",
+          padding: "3px 10px", borderRadius: "12px", fontSize: "10px",
           cursor: "pointer", border: "1px solid rgba(255,255,255,0.2)",
           background: showSettings ? "rgba(255,200,100,0.3)" : "rgba(255,255,255,0.08)",
           color: "white"
@@ -245,30 +211,30 @@ function PomodoroTimer() {
       {/* Custom inputs */}
       {showSettings && (
         <div style={{
-          background: "rgba(0,0,0,0.3)", borderRadius: "12px", padding: "12px",
-          marginBottom: "12px", display: "flex", gap: "10px",
+          background: "rgba(0,0,0,0.3)", borderRadius: "12px", padding: "10px",
+          marginBottom: "10px", display: "flex", gap: "10px",
           alignItems: "flex-end", justifyContent: "center"
         }}>
           <div>
-            <p style={{ fontSize: "10px", opacity: 0.6, marginBottom: "4px" }}>FOCUS (min)</p>
+            <p style={{ fontSize: "9px", opacity: 0.6, marginBottom: "4px" }}>FOCUS (min)</p>
             <input type="number" min="1" max="120" value={customFocus}
               onChange={e => setCustomFocus(e.target.value)}
-              style={{ width: "60px", padding: "6px", borderRadius: "8px",
+              style={{ width: "55px", padding: "5px", borderRadius: "8px",
                 background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
-                color: "white", fontSize: "14px", textAlign: "center", outline: "none" }}
+                color: "white", fontSize: "13px", textAlign: "center", outline: "none" }}
             />
           </div>
           <div>
-            <p style={{ fontSize: "10px", opacity: 0.6, marginBottom: "4px" }}>BREAK (min)</p>
+            <p style={{ fontSize: "9px", opacity: 0.6, marginBottom: "4px" }}>BREAK (min)</p>
             <input type="number" min="1" max="60" value={customBreak}
               onChange={e => setCustomBreak(e.target.value)}
-              style={{ width: "60px", padding: "6px", borderRadius: "8px",
+              style={{ width: "55px", padding: "5px", borderRadius: "8px",
                 background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
-                color: "white", fontSize: "14px", textAlign: "center", outline: "none" }}
+                color: "white", fontSize: "13px", textAlign: "center", outline: "none" }}
             />
           </div>
           <button onClick={applyCustom} style={{
-            padding: "8px 16px", borderRadius: "10px",
+            padding: "7px 14px", borderRadius: "10px",
             background: "rgba(100,255,150,0.3)",
             border: "1px solid rgba(100,255,150,0.4)",
             color: "white", fontSize: "12px", cursor: "pointer"
@@ -277,8 +243,11 @@ function PomodoroTimer() {
       )}
 
       {/* Controls */}
-      <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-        <button onClick={() => setIsRunning(!isRunning)} style={btnStyle}>
+      <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+        <button onClick={() => {
+          setIsRunning(!isRunning)
+          if (!isRunning && onFocusStart) onFocusStart()
+        }} style={btnStyle}>
           {isRunning ? "⏸ Pause" : "▶ Start"}
         </button>
         <button onClick={() => {
@@ -291,7 +260,6 @@ function PomodoroTimer() {
   )
 }
 
-// ─── Stopwatch ──────────────────────────────────────────────────────────────
 function Stopwatch() {
   const [time, setTime]           = useState(0)
   const [isRunning, setIsRunning] = useState(false)
@@ -327,16 +295,15 @@ function Stopwatch() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <p style={{ fontSize: "11px", letterSpacing: "3px", marginBottom: "18px", opacity: 0.6 }}>
-        ⏱️ FREE STUDY — study at your own pace
+      <p style={{ fontSize: "10px", letterSpacing: "3px", marginBottom: "12px", opacity: 0.6 }}>
+        ⏱️ FREE STUDY — your pace
       </p>
 
-      <div style={{ marginBottom: "20px" }}>
-        <FlipClock minutes={minutes} seconds={seconds} />
-      </div>
+      <div style={{ marginBottom: "12px", display: "flex", justifyContent: "center" }}>
+  <FlipClock minutes={minutes} seconds={seconds} />
+</div>
 
-      {/* Controls */}
-      <div style={{ display: "flex", gap: "10px", justifyContent: "center", marginBottom: "14px" }}>
+      <div style={{ display: "flex", gap: "10px", justifyContent: "center", marginBottom: "10px" }}>
         <button onClick={() => setIsRunning(!isRunning)} style={btnStyle}>
           {isRunning ? "⏸ Pause" : "▶ Start"}
         </button>
@@ -346,16 +313,15 @@ function Stopwatch() {
         <button onClick={reset} style={btnStyle}>↺ Reset</button>
       </div>
 
-      {/* Laps */}
       {laps.length > 0 && (
         <div style={{
-          maxHeight: "90px", overflowY: "auto",
-          background: "rgba(0,0,0,0.2)", borderRadius: "10px", padding: "8px"
+          maxHeight: "80px", overflowY: "auto",
+          background: "rgba(0,0,0,0.2)", borderRadius: "10px", padding: "6px"
         }}>
           {laps.map((lap, i) => (
             <div key={i} style={{
               display: "flex", justifyContent: "space-between",
-              fontSize: "12px", padding: "3px 8px", opacity: 0.75
+              fontSize: "11px", padding: "3px 8px", opacity: 0.75
             }}>
               <span>Lap {laps.length - i}</span>
               <span>{formatTime(lap)}</span>
@@ -367,8 +333,15 @@ function Stopwatch() {
   )
 }
 
-// ─── Main Export ────────────────────────────────────────────────────────────
-export default function Timer() {
+const btnStyle = {
+  padding: "7px 18px",
+  background: "rgba(255,255,255,0.12)",
+  border: "1px solid rgba(255,255,255,0.25)",
+  borderRadius: "25px", color: "white",
+  fontSize: "12px", cursor: "pointer"
+}
+
+export default function Timer({ onFocusStart, onTimerChange }) {
   const [mode, setMode] = useState("pomodoro")
 
   return (
@@ -379,30 +352,30 @@ export default function Timer() {
       transform: "translateX(-50%)",
       color: "white",
       background: "rgba(0,0,0,0.5)",
-      padding: "24px 36px",
-      borderRadius: "24px",
+      padding: "16px 28px",
+      borderRadius: "20px",
       backdropFilter: "blur(12px)",
-      minWidth: "400px",
+      minWidth: "300px",
       border: "1px solid rgba(255,255,255,0.08)"
     }}>
-
-      {/* Mode toggle */}
-      <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginBottom: "20px" }}>
+      <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginBottom: "14px" }}>
         <button onClick={() => setMode("pomodoro")} style={{
-          padding: "7px 22px", borderRadius: "20px", fontSize: "12px",
+          padding: "5px 16px", borderRadius: "20px", fontSize: "10px",
           cursor: "pointer", border: "1px solid rgba(255,255,255,0.2)",
           background: mode === "pomodoro" ? "rgba(100,255,150,0.25)" : "rgba(255,255,255,0.07)",
           color: "white", letterSpacing: "1px"
         }}>🍅 POMODORO</button>
         <button onClick={() => setMode("stopwatch")} style={{
-          padding: "7px 22px", borderRadius: "20px", fontSize: "12px",
+          padding: "5px 16px", borderRadius: "20px", fontSize: "10px",
           cursor: "pointer", border: "1px solid rgba(255,255,255,0.2)",
           background: mode === "stopwatch" ? "rgba(100,200,255,0.25)" : "rgba(255,255,255,0.07)",
           color: "white", letterSpacing: "1px"
         }}>⏱️ STOPWATCH</button>
       </div>
 
-      {mode === "pomodoro" ? <PomodoroTimer /> : <Stopwatch />}
+      {mode === "pomodoro"
+        ? <PomodoroTimer onFocusStart={onFocusStart} onTimerChange={onTimerChange} />
+        : <Stopwatch />}
     </div>
   )
 }
