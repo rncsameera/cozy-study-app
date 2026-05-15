@@ -1,6 +1,6 @@
-# FocusDiva – Study Website
+# ZenoSpace – Study Website
 
-FocusDiva is an interactive and cozy web application designed to help users stay focused during study sessions.
+ZenoSpace is an interactive and cozy web application designed to help users stay focused during study sessions.
 
 ## Features
 - User login system
@@ -9,7 +9,7 @@ FocusDiva is an interactive and cozy web application designed to help users stay
 - Notes can be revisited anytime
 
 ## Live Demo
-https://focus-diva.vercel.app/
+https://zenospace.vercel.app/
 
 ## Deployment
 The application is deployed using Vercel.
